@@ -27,4 +27,4 @@ Options:
 ~$ ./getTweets.sh -u kevcui
 ```
 
-All downloaded tweets will be stored in a json file, format like: <handle>_<timestamp>.json
+All downloaded tweets will be stored in a json file, format like: `<handle>_<timestamp>.json`
