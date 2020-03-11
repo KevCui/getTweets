@@ -54,8 +54,10 @@ check_var() {
 }
 
 fetch_guest_token() {
-    # $1: main html
-    $_PUP 'script' <<< "$1" \
+    # $1: twitter handle
+    $_CURL -sS "$_HOST_URL/$1" \
+        -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/73.0' \
+        | $_PUP 'script' \
         | grep cookie \
         | sed -E 's/.*gt=//' \
         | awk -F ';' '{print $1}'
@@ -79,23 +81,15 @@ fetch_tweets() {
         | $_JQ -r '.globalObjects.tweets'
 }
 
-download_main_html() {
-    # $1: twitter handle
-    $_CURL -sS "$_HOST_URL/$1" \
-        -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/73.0'
-}
-
 main() {
     set_args "$@"
     set_var
     check_var
 
-    local i h t
+    local i t
 
     i=$(get_user_id "$_USER_HANDLE" "$_AUTH_TOKEN")
-
-    h=$(download_main_html "$_USER_HANDLE")
-    t=$(fetch_guest_token "$h")
+    t=$(fetch_guest_token "$_USER_HANDLE")
 
     fetch_tweets "$i" "$_AUTH_TOKEN" "$t" > "${_USER_HANDLE}_${_TIMESTAMP}.json"
 }
