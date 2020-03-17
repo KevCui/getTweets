@@ -3,10 +3,12 @@
 # Fetch tweets from a specific user
 #
 #/ Usage:
-#/   ./getTweets.sh -u <twitter_handle>
+#/   ./getTweets.sh -u <twitter_handle> | -m <max_num> | -d
 #/
 #/ Options:
 #/   -u <handle>        Mandatory, set twitter handle
+#/   -d                 Optional, direct output without saving to json file
+#/   -m                 Optional, max tweets number to download
 #/   -h | --help        Display this help message
 
 set -e
@@ -23,7 +25,7 @@ set_var() {
 
     _HOST_URL="https://twitter.com"
     _API_URL="https://api.twitter.com"
-    _MAX_TWEETS="4000" # API limit ~3200
+    [[ -z "${_MAX_TWEETS:-}" ]] && _MAX_TWEETS="4000" # API limit ~3200
     _AUTH_TOKEN="AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA"
 
     _TIMESTAMP="$(date +%s)"
@@ -31,10 +33,16 @@ set_var() {
 
 set_args() {
     expr "$*" : ".*--help" > /dev/null && usage
-    while getopts ":hu:" opt; do
+    while getopts ":hdm:u:" opt; do
         case $opt in
             u)
                 _USER_HANDLE="$OPTARG"
+                ;;
+            d)
+                _DIRECT_OUTPUT=true
+                ;;
+            m)
+                _MAX_TWEETS="$OPTARG"
                 ;;
             h)
                 usage
@@ -92,7 +100,11 @@ main() {
     i=$(get_user_id "$_USER_HANDLE" "$_AUTH_TOKEN")
     t=$(fetch_guest_token "$_USER_HANDLE")
 
-    fetch_tweets "$i" "$_AUTH_TOKEN" "$t" > "${_USER_HANDLE}_${_TIMESTAMP}.json"
+    if [[ -z "${_DIRECT_OUTPUT:-}" ]]; then
+        fetch_tweets "$i" "$_AUTH_TOKEN" "$t" > "${_USER_HANDLE}_${_TIMESTAMP}.json"
+    else
+        fetch_tweets "$i" "$_AUTH_TOKEN" "$t"
+    fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
