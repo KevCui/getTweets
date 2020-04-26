@@ -12,7 +12,7 @@ getTweets.sh is a quick and simple Bash script, for fetching tweets from a speci
 
 ```
 Usage:
-  ./getTweets.sh -u <twitter_handle> | -m <max_num> | -d
+  ./getTweets.sh -u <twitter_handle> [-m <max_num>] [-d]
 
 Options:
   -u <handle>        Mandatory, set twitter handle

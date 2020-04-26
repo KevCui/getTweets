@@ -3,7 +3,7 @@
 # Fetch tweets from a specific user
 #
 #/ Usage:
-#/   ./getTweets.sh -u <twitter_handle> | -m <max_num> | -d
+#/   ./getTweets.sh -u <twitter_handle> [-m <max_num>] [-d]
 #/
 #/ Options:
 #/   -u <handle>        Mandatory, set twitter handle
