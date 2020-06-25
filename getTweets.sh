@@ -20,7 +20,6 @@ usage() {
 
 set_var() {
     _CURL=$(command -v curl)
-    _PUP=$(command -v pup)
     _JQ=$(command -v jq)
 
     _HOST_URL="https://twitter.com"
@@ -63,10 +62,9 @@ check_var() {
 
 fetch_guest_token() {
     # $1: twitter handle
-    $_CURL -sS "$_HOST_URL/$1" \
+    $_CURL -sS -D - "$_HOST_URL/$1" \
         -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/73.0' \
-        | $_PUP 'script' \
-        | grep cookie \
+        | grep 'set-cookie: gt=' \
         | sed -E 's/.*gt=//' \
         | awk -F ';' '{print $1}'
 }

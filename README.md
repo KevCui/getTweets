@@ -6,7 +6,6 @@ getTweets.sh is a quick and simple Bash script, for fetching tweets from a speci
 ## Dependency
 
 - [jq](https://stedolan.github.io/jq/)
-- [pup](https://github.com/EricChiang/pup)
 
 ## How to use
 
