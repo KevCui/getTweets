@@ -62,9 +62,9 @@ check_var() {
 
 fetch_guest_token() {
     # $1: twitter handle
-    $_CURL -sS -D - "$_HOST_URL/$1" \
+    $_CURL -sS "$_HOST_URL/$1" \
         -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/73.0' \
-        | grep 'set-cookie: gt=' \
+        | grep 'decodeURIComponent("gt=' \
         | sed -E 's/.*gt=//' \
         | awk -F ';' '{print $1}'
 }
